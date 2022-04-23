@@ -1,113 +1,54 @@
 "use strict";
 
-import * as Three from './three.mjs';
+import * as THREE from "./three.mjs";
 
-const WIDTH = 10;
-const HEIGHT = 3;
-const DEPTH = 1;
-const PILLARRADIUS = DEPTH * 1.2;
-const mat = new Three.MeshBasicMaterial({color: 0x1F285F})
+const HEIGHT = 0.4;
+const DEPTH = 0.01;
+const mat = new THREE.MeshBasicMaterial({ color: 0x1f285f });
 
-export default class Gate{
-    constructor(x, z, xAxis)
-    {
-        this.x = x;
-        this.z = z;
-        this.xAxis = xAxis;
-    }
+const ORIENTATIONS = {
+	VERTICAL: 0,
+	HORIZONTAL: 1
+}
 
-    render(scene)
-    {
-        this.addPillars(scene);
-        this.addGatePost(scene);
-    }
+export default class Gate {
+	constructor(x1, z1, x2, z2) {
+		this.x1 = x1;
+		this.z1 = z1;
+		this.x2 = x2;
+		this.z2 = z2;
+	}
 
-    addPillars(scene)
-    {
-        if(this.xAxis)
-        {
-            var pillarShape = new Three.CylinderGeometry(PILLARRADIUS, PILLARRADIUS, HEIGHT);
-    
-            var firstPillar = new Three.Mesh(pillarShape, mat);
-            firstPillar.position.x = this.x - (WIDTH / 2);
-            firstPillar.position.z = this.z;
-            
-            var secondPillar = new Three.Mesh(pillarShape, mat);
-            secondPillar.position.x = this.x + (WIDTH / 2);
-            secondPillar.position.z = this.z;
-    
-            scene.add(firstPillar);
-            scene.add(secondPillar);
-            var pillarShape = new Three.CylinderGeometry(PILLARRADIUS, PILLARRADIUS, HEIGHT);
-    
-            var firstPillar = new Three.Mesh(pillarShape, mat);
-            firstPillar.position.x = this.x - (WIDTH / 2);
-            firstPillar.position.z = this.z;
-            
-            var secondPillar = new Three.Mesh(pillarShape, mat);
-            secondPillar.position.x = this.x + (WIDTH / 2);
-            secondPillar.position.z = this.z;
-    
-            scene.add(firstPillar);
-            scene.add(secondPillar);
-        }
+	getOrientation()
+	{
+		if(Math.abs(this.x1-this.x2))
+		{
+			return ORIENTATIONS.HORIZONTAL
+		}
+		return ORIENTATIONS.VERTICAL
+	}
 
-        else
-        {
-            var pillarShape = new Three.CylinderGeometry(PILLARRADIUS, PILLARRADIUS, HEIGHT);
-    
-            var firstPillar = new Three.Mesh(pillarShape, mat);
-            firstPillar.position.x = this.x;
-            firstPillar.position.z = this.z - (WIDTH / 2);
-            
-            var secondPillar = new Three.Mesh(pillarShape, mat);
-            secondPillar.position.x = this.x;
-            secondPillar.position.z = this.z + (WIDTH / 2);
-    
-            scene.add(firstPillar);
-            scene.add(secondPillar);
-        }
-    }
+	render(scene) {
+		var orientation = this.getOrientation();
+		console.log(orientation);
+		if(orientation == ORIENTATIONS.HORIZONTAL)
+		{
+			var cubeShape = new THREE.BoxGeometry(Math.abs(this.x1 - this.x2), HEIGHT, DEPTH);
+			this.mesh = new THREE.Mesh(cubeShape, mat);
+			this.mesh.position.x = (this.x1 + this.x2) / 2;
+			this.mesh.position.z = (this.z1 + this.z2) / 2;
+			console.log(this.mesh);
+			scene.add(this.mesh);
+		}
+		else
+		{
+			var cubeShape = new THREE.BoxGeometry(DEPTH, HEIGHT, Math.abs(this.z2 - this.z1));
+			this.mesh = new THREE.Mesh(cubeShape, mat);
+			this.mesh.position.x = (this.x1 + this.x2) / 2;
+			this.mesh.position.z = (this.z1 + this.z2) / 2;
+			console.log(this.mesh);
+			scene.add(this.mesh);
+		}
 
-    addGatePost(scene)
-    {
-        if(this.xAxis)
-        {
-            var gap = 0.1 * HEIGHT;
-            var postHeight = 0.35 * HEIGHT;
-
-            var geo = new Three.BoxGeometry(WIDTH, postHeight, DEPTH);
-
-            var bottomPost = new Three.Mesh(geo, mat);
-            bottomPost.position.x  = this.x;
-            bottomPost.position.z = this.z;
-            bottomPost.position.y = gap + 0.5 * postHeight;
-            scene.add(bottomPost);
-
-            var topPost = new Three.Mesh(geo, mat);
-            topPost.position.x = this.x;
-            topPost.position.z = this.z;
-            topPost.position.y = 2 * gap + 1.5 * postHeight;
-            scene.add(topPost);
-        }
-        else
-        {
-            var gap = 0.1 * HEIGHT;
-            var postHeight = 0.35 * HEIGHT;
-
-            var geo = new Three.BoxGeometry(DEPTH, postHeight, WIDTH);
-
-            var bottomPost = new Three.Mesh(geo, mat);
-            bottomPost.position.x  = this.x;
-            bottomPost.position.z = this.z;
-            bottomPost.position.y = gap + 0.5 * postHeight;
-            scene.add(bottomPost);
-
-            var topPost = new Three.Mesh(geo, mat);
-            topPost.position.x = this.x;
-            topPost.position.z = this.z;
-            topPost.position.y = 2 * gap + 1.5 * postHeight;
-            scene.add(topPost);
-        }
-    }
+	}
 }
