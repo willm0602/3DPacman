@@ -30,25 +30,21 @@ export default class Gate {
 
 	render(scene) {
 		var orientation = this.getOrientation();
-		console.log(orientation);
-		if(orientation == ORIENTATIONS.HORIZONTAL)
-		{
-			var cubeShape = new THREE.BoxGeometry(Math.abs(this.x1 - this.x2), HEIGHT, DEPTH);
-			this.mesh = new THREE.Mesh(cubeShape, mat);
-			this.mesh.position.x = (this.x1 + this.x2) / 2;
-			this.mesh.position.z = (this.z1 + this.z2) / 2;
-			console.log(this.mesh);
-			scene.add(this.mesh);
-		}
-		else
-		{
-			var cubeShape = new THREE.BoxGeometry(DEPTH, HEIGHT, Math.abs(this.z2 - this.z1));
-			this.mesh = new THREE.Mesh(cubeShape, mat);
-			this.mesh.position.x = (this.x1 + this.x2) / 2;
-			this.mesh.position.z = (this.z1 + this.z2) / 2;
-			console.log(this.mesh);
-			scene.add(this.mesh);
-		}
 
+		var centerX = (this.x1 + this.x2) / 2;
+		var centerZ = (this.z1 + this.z2) / 2;
+
+		var width = Math.abs(this.x2 - this.x1) + 1;
+		var depth = Math.abs(this.z2 - this.z1) + 1;
+
+		var shape = new THREE.BoxGeometry(
+			width, HEIGHT, depth
+		);
+		
+		var mesh = new THREE.Mesh(shape, mat);
+		mesh.position.x = centerX;
+		mesh.position.z = centerZ;
+
+		scene.add(mesh);
 	}
 }

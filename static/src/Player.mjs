@@ -4,7 +4,7 @@ import Gate from './Gate.mjs';
 import * as THREE from './three.mjs';
 
 const C = {
-    PACMANRADIUS: 1,
+    PACMANRADIUS: 0.5,
     MINMOUTH: 0,
     MAXMOUTH: Math.PI * 3 / 8,
     MOUTHDELTA: .1,
@@ -55,6 +55,7 @@ export default class Player{
         );
 
         var mat = new THREE.MeshBasicMaterial({color: 0xE6FF00});
+        mat.opacity = 0.2;
 
         this.topMesh = new THREE.Mesh(topShape, mat);
         this.botMesh = new THREE.Mesh(botShape, mat);
@@ -128,6 +129,7 @@ export default class Player{
             camera.position.x+=this.facing[0];
             camera.position.z+=this.facing[1];
         }
+        console.log(this.x, this.z);
     }
 
     moveMouth()
