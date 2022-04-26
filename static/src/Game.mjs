@@ -3,6 +3,7 @@ import Player from "./Player.mjs";
 import * as C from "./C.mjs";
 import Gates from "./Gates.mjs";
 import Gate from "./Gate.mjs";
+import GHOSTS from "./Ghosts.mjs";
 
 export default class Game {
   constructor() {
@@ -23,14 +24,14 @@ export default class Game {
     this.camera.rotateZ(C.CAMANGLE[2]);
 
     this.scene = new THREE.Scene();
-
+    this.ghosts = GHOSTS;
     //loads in game objects
     this.loadObjects();
   }
   loadObjects() {
     //adds player
     this.player = new Player();
-    this.player.addToScene(this.scene);
+    this.player.render(this.scene);
 
     var gates = [];
     //adds gates
@@ -39,6 +40,10 @@ export default class Game {
       gates.push(gateMesh);
       gateMesh.render(this.scene);
     });
+
+    this.ghosts.forEach((ghost) => {
+      ghost.render(this.scene);
+    })
 
     document.addEventListener("keypress", (e) => {
       this.player.move(e.key, this.camera, gates);
@@ -56,7 +61,6 @@ export default class Game {
     if (!game) {
       game = this;
     }
-    game.player.moveMouth();
     requestAnimationFrame(() => {
       game.animationLoop(game);
     });

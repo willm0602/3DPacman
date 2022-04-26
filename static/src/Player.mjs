@@ -8,7 +8,9 @@ const C = {
     MINMOUTH: 0,
     MAXMOUTH: Math.PI * 3 / 8,
     MOUTHDELTA: .1,
-    SIDES:256
+    SIDES:256,
+    MOVETIME: 100,
+    MOVESTEPS: 100
 }
 
 function getFacing(key, dir)
@@ -55,16 +57,13 @@ export default class Player{
         );
 
         var mat = new THREE.MeshBasicMaterial({color: 0xE6FF00});
-        mat.opacity = 0.2;
 
         this.topMesh = new THREE.Mesh(topShape, mat);
         this.botMesh = new THREE.Mesh(botShape, mat);
-
-        this.mouthAngle = 0;
-        this.opening = true;
+        this.moving = false;
     }
 
-    addToScene(scene)
+    render(scene)
     {
         scene.add(this.topMesh);
         scene.add(this.botMesh);
@@ -72,7 +71,6 @@ export default class Player{
 
     wouldIntersectGate(gate = new Gate(0,0,0,0))
     {
-        console.log(this, gate);
         var testX = this.x + this.facing[0];
         var testZ = this.z + this.facing[1];
 
@@ -84,7 +82,6 @@ export default class Player{
 
         if(gateLeft <= testX && testX <= gateRight && gateForward <= testZ && testZ <= gateBack)
         {
-            console.log("in gate");
             return true;
         }
         return false;
@@ -97,7 +94,6 @@ export default class Player{
         {
             if(this.wouldIntersectGate(gate))
             {
-                console.log(gate);
                 return true;
             }
         }
@@ -118,39 +114,28 @@ export default class Player{
 
         this.facing = getFacing(key, this.facing);
 
-        if('wasd'.indexOf(key) > -1 && !this.wouldRunIntoGates(gates))
+        if('wasd'.indexOf(key) > -1 && !this.wouldRunIntoGates(gates) && !this.moving)
         {
-            this.botMesh.position.x+=this.facing[0];
-            this.botMesh.position.z+=this.facing[1];
-            this.topMesh.position.x+=this.facing[0];
-            this.topMesh.position.z+=this.facing[1];
+            this.moving = true;
+            for(let i = 0; i <= C.MOVESTEPS; i++)
+            {
+                let j = i;
+                console.log(j)
+                setTimeout((e) =>{
+                    this.botMesh.position.z+=this.facing[1] * (1 / C.MOVESTEPS);
+                    this.topMesh.position.x+=this.facing[0] * (1 / C.MOVESTEPS);
+                    this.botMesh.position.x+=this.facing[0] * (1 / C.MOVESTEPS);
+                    this.topMesh.position.z+=this.facing[1] * (1 / C.MOVESTEPS);
+                    camera.position.x+=this.facing[0] * (1 / C.MOVESTEPS);
+                    camera.position.z+=this.facing[1] * (1 / C.MOVESTEPS);
+                }, (j / C.MOVESTEPS * C.MOVETIME))
+            }
             this.x+=this.facing[0];
             this.z+=this.facing[1];
-            camera.position.x+=this.facing[0];
-            camera.position.z+=this.facing[1];
+            this.moving = false;
+            console.log(this.topMesh.position, this.x, this.z);
+
         }
-        console.log(this.x, this.z);
     }
 
-    moveMouth()
-    {
-        if(this.opening)
-        {
-            this.mouthAngle+=C.MOUTHDELTA;
-            this.topMesh.rotateX(C.MOUTHDELTA)
-            if(this.mouthAngle >= C.MAXMOUTH)
-            {
-                this.opening = false;
-            }
-        }
-        else
-        {
-            this.mouthAngle-=C.MOUTHDELTA;
-            this.topMesh.rotateX(-C.MOUTHDELTA)
-            if(this.mouthAngle <= C.MINMOUTH)
-            {
-                this.opening = true;
-            }
-        }
-    }
 }
