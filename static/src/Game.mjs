@@ -56,6 +56,7 @@ export default class Game {
     document.body.appendChild(this.renderer.domElement);
     this.animationLoop();
   }
+  
 
   animationLoop(game) {
     if (!game) {
