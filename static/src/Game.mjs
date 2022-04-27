@@ -5,6 +5,8 @@ import Gates from "./Gates.mjs";
 import Gate from "./Gate.mjs";
 import GHOSTS from "./Ghosts.mjs";
 
+const TICKDELAY = 1;
+
 export default class Game {
   constructor() {
     //sets up scene
@@ -33,11 +35,11 @@ export default class Game {
     this.player = new Player();
     this.player.render(this.scene);
 
-    var gates = [];
+    this.gates = [];
     //adds gates
     Gates.forEach((gate) => {
       var gateMesh = new Gate(...gate);
-      gates.push(gateMesh);
+      this.gates.push(gateMesh);
       gateMesh.render(this.scene);
     });
 
@@ -46,7 +48,7 @@ export default class Game {
     })
 
     document.addEventListener("keypress", (e) => {
-      this.player.move(e.key, this.camera, gates);
+      this.player.turn(e.key);
     });
   }
 
@@ -54,13 +56,26 @@ export default class Game {
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(this.renderer.domElement);
+    this.lastGameLoop = new Date();
     this.animationLoop();
+  }
+
+  gameloop(){
+    this.player.move(this.camera, this.gates);
+    this.lastGameLoop = new Date();
   }
 
   animationLoop(game) {
     if (!game) {
       game = this;
     }
+
+    var now = new Date();
+    var dt = (now - game.lastGameLoop) / (1000);
+
+    if(dt >TICKDELAY)
+      game.gameloop();
+
     requestAnimationFrame(() => {
       game.animationLoop(game);
     });

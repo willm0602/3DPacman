@@ -2,7 +2,7 @@ import * as THREE from './three.mjs';
 
 const RADIUS = 0.5;
 const SIDES = 32;
-const LEGRADIUS = 0.01;
+const LEGRADIUS = 0.05;
 
 export default class Ghost{
     constructor(color, x=0,z=0)
