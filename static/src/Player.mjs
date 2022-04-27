@@ -102,16 +102,6 @@ export default class Player{
 
     move(key, camera, gates)
     {
-
-        if(key == 'w')
-            this.topMesh.rotation.y = 0;
-        if(key == 'a')
-            this.topMesh.rotation.y = Math.PI / 2;
-        if(key == 's')
-            this.topMesh.rotation.y = Math.PI;
-        if(key == 'd')
-            this.topMesh.rotation.y = 3 * Math.PI / 2;
-
         this.facing = getFacing(key, this.facing);
 
         if('wasd'.indexOf(key) > -1 && !this.wouldRunIntoGates(gates) && !this.moving)
@@ -120,7 +110,6 @@ export default class Player{
             for(let i = 0; i <= C.MOVESTEPS; i++)
             {
                 let j = i;
-                console.log(j)
                 setTimeout((e) =>{
                     this.botMesh.position.z+=this.facing[1] * (1 / C.MOVESTEPS);
                     this.topMesh.position.x+=this.facing[0] * (1 / C.MOVESTEPS);
@@ -132,8 +121,12 @@ export default class Player{
             }
             this.x+=this.facing[0];
             this.z+=this.facing[1];
-            this.moving = false;
-            console.log(this.topMesh.position, this.x, this.z);
+            
+            setTimeout(() => {
+                this.topMesh.x = this.x;
+                this.topMesh.z = this.z;
+                this.moving=false;
+            }, C.MOVETIME);
 
         }
     }
