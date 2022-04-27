@@ -55,6 +55,7 @@ export default class Player{
             Math.PI / 2,
             Math.PI
         );
+        
 
         //material for Pacman
         var mat = new THREE.MeshBasicMaterial({color: 0xE6FF00});
@@ -71,7 +72,8 @@ export default class Player{
         scene.add(this.botMesh);
     }
 
-    wouldIntersectGate(gate = new Gate(0,0,0,0))
+    //checks if player would run into a specified gate
+    wouldRunIntoGate(gate)
     {
         var testX = this.x + this.facing[0];
         var testZ = this.z + this.facing[1];
@@ -89,12 +91,12 @@ export default class Player{
         return false;
     }
 
-    //checks if player can move in the direction it is currently in
-    wouldRunIntoGates(gates=[new Gate(0, 0, 1, 2)])
+    //checks if player can move in the direction it is currently in without running into a gate
+    wouldRunIntoGates(gates=[])
     {
         for(var gate of gates)
         {
-            if(this.wouldIntersectGate(gate))
+            if(this.wouldRunIntoGate(gate))
             {
                 return true;
             }
@@ -102,11 +104,17 @@ export default class Player{
         return false;
     }
 
-    move(key, camera, gates)
+    //turns the player to the direction it should be pointing
+    turn(key)
     {
-        this.facing = getFacing(key, this.facing);
+        if('wasd'.indexOf(key) > -1)
+            this.facing = getFacing(key, this.facing);
+    }
 
-        if('wasd'.indexOf(key) > -1 && !this.wouldRunIntoGates(gates) && !this.moving)
+    //moves the player (normally handled in each game tick)
+    move(camera, gates)
+    {
+        if(!(this.moving || this.wouldRunIntoGates(gates)))
         {
             this.moving = true;
             this.x+=this.facing[0];
@@ -120,5 +128,4 @@ export default class Player{
             this.moving = false;
         }
     }
-
 }
