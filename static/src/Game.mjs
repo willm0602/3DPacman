@@ -59,6 +59,7 @@ export default class Game {
     this.lastGameLoop = new Date();
     this.animationLoop();
   }
+  
 
   gameloop(){
     this.player.move(this.camera, this.gates);
