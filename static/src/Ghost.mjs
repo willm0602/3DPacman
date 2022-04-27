@@ -2,7 +2,7 @@ import * as THREE from './three.mjs';
 
 const RADIUS = 0.5;
 const SIDES = 32;
-const LEGRADIUS = 0.1;
+const LEGRADIUS = 0.01;
 
 export default class Ghost{
     constructor(color, x=0,z=0)
@@ -26,6 +26,7 @@ export default class Ghost{
         this.body = new THREE.Mesh(bodyShape, this.mat);
         this.body.position.x = this.x;
         this.body.position.z = this.z;
+        this.body.position.y = 0.2
         scene.add(this.body); 
     }
 
@@ -36,12 +37,14 @@ export default class Ghost{
         foot.position.x = x;
         foot.position.z = z;
         foot.position.y = LEGRADIUS;
+        var footHeight = LEGRADIUS;
 
-        var legShape = new THREE.CylinderGeometry(LEGRADIUS, LEGRADIUS, (RADIUS - LEGRADIUS) / 2, 25);
+        var legHeight = RADIUS - footHeight
+        var legShape = new THREE.CylinderGeometry(LEGRADIUS, LEGRADIUS, legHeight, 25);
         var leg = new THREE.Mesh(legShape, this.mat);
         leg.position.x = x;
         leg.position.z = z;
-        leg.position.y = LEGRADIUS + 0.5 * (RADIUS - LEGRADIUS);
+        leg.position.y = footHeight + legHeight / 4;
 
         return {
             foot: foot,

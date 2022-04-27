@@ -35,7 +35,7 @@ export default class Player{
         this.angle = angle;
         this.facing = [0, -1]
 
-        //graphics properties
+        //player shapes
         var topShape = new THREE.SphereGeometry(
             C.PACMANRADIUS,
             C.SIDES,
@@ -56,8 +56,10 @@ export default class Player{
             Math.PI
         );
 
+        //material for Pacman
         var mat = new THREE.MeshBasicMaterial({color: 0xE6FF00});
 
+        //object properties
         this.topMesh = new THREE.Mesh(topShape, mat);
         this.botMesh = new THREE.Mesh(botShape, mat);
         this.moving = false;
@@ -87,9 +89,9 @@ export default class Player{
         return false;
     }
 
+    //checks if player can move in the direction it is currently in
     wouldRunIntoGates(gates=[new Gate(0, 0, 1, 2)])
     {
-        console.clear();
         for(var gate of gates)
         {
             if(this.wouldIntersectGate(gate))
@@ -107,27 +109,15 @@ export default class Player{
         if('wasd'.indexOf(key) > -1 && !this.wouldRunIntoGates(gates) && !this.moving)
         {
             this.moving = true;
-            for(let i = 0; i <= C.MOVESTEPS; i++)
-            {
-                let j = i;
-                setTimeout((e) =>{
-                    this.botMesh.position.z+=this.facing[1] * (1 / C.MOVESTEPS);
-                    this.topMesh.position.x+=this.facing[0] * (1 / C.MOVESTEPS);
-                    this.botMesh.position.x+=this.facing[0] * (1 / C.MOVESTEPS);
-                    this.topMesh.position.z+=this.facing[1] * (1 / C.MOVESTEPS);
-                    camera.position.x+=this.facing[0] * (1 / C.MOVESTEPS);
-                    camera.position.z+=this.facing[1] * (1 / C.MOVESTEPS);
-                }, (j / C.MOVESTEPS * C.MOVETIME))
-            }
             this.x+=this.facing[0];
             this.z+=this.facing[1];
-            
-            setTimeout(() => {
-                this.topMesh.x = this.x;
-                this.topMesh.z = this.z;
-                this.moving=false;
-            }, C.MOVETIME);
-
+            camera.position.x+=this.facing[0];
+            camera.position.z+=this.facing[1];
+            this.botMesh.position.x = this.x;
+            this.botMesh.position.z = this.z;  
+            this.topMesh.position.x = this.x;
+            this.topMesh.position.z = this.z;          
+            this.moving = false;
         }
     }
 
