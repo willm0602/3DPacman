@@ -10,7 +10,8 @@ const C = {
     MOUTHDELTA: .1,
     SIDES:256,
     MOVETIME: 100,
-    MOVESTEPS: 100
+    MOVESTEPS: 100,
+    GLOWGAP: 0.02
 }
 
 function getFacing(key, dir)
@@ -56,13 +57,21 @@ export default class Player{
             Math.PI
         );
         
+        var glowShape = new THREE.SphereGeometry(
+            C.PACMANRADIUS + C.GLOWGAP,
+            C.SIDES,
+            C.SIDES
+        )
 
         //material for Pacman
-        var mat = new THREE.MeshBasicMaterial({color: 0xE6FF00});
+        var mat = new THREE.MeshBasicMaterial({color: 0xF6FF00});
+        var glow = new THREE.MeshBasicMaterial({color: 0xC3FF00, transparent: true, opacity: 0.5})
+
 
         //object properties
         this.topMesh = new THREE.Mesh(topShape, mat);
         this.botMesh = new THREE.Mesh(botShape, mat);
+        this.glowMesh = new THREE.Mesh(glowShape, glow);
         this.moving = false;
     }
 
@@ -70,6 +79,7 @@ export default class Player{
     {
         scene.add(this.topMesh);
         scene.add(this.botMesh);
+        scene.add(this.glowMesh);
     }
 
     //checks if player would run into a specified gate
@@ -121,6 +131,8 @@ export default class Player{
             this.z+=this.facing[1];
             camera.position.x+=this.facing[0];
             camera.position.z+=this.facing[1];
+            this.glowMesh.position.x+=this.facing[0];
+            this.glowMesh.position.z+=this.facing[1];
             this.botMesh.position.x = this.x;
             this.botMesh.position.z = this.z;  
             this.topMesh.position.x = this.x;

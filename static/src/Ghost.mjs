@@ -10,7 +10,7 @@ export default class Ghost{
         this.color = color;
         this.x = x;
         this.z =z;
-        this.mat = new THREE.MeshBasicMaterial({color: this.color});
+        this.mat = new THREE.MeshBasicMaterial({color: this.color, transparent: true, opacity: 0.6});
     }
     addBody(scene)
     {
