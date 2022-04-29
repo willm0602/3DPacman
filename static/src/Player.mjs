@@ -36,7 +36,7 @@ export default class Player{
         this.angle = angle;
         this.facing = [0, -1]
 
-        //player shapes
+        //geometries for top and bottom halves of pacman
         var topShape = new THREE.SphereGeometry(
             C.PACMANRADIUS,
             C.SIDES,
@@ -57,6 +57,7 @@ export default class Player{
             Math.PI
         );
         
+        //glow for pacman
         var glowShape = new THREE.SphereGeometry(
             C.PACMANRADIUS + C.GLOWGAP,
             C.SIDES,
