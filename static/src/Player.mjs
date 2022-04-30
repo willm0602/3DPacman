@@ -3,15 +3,15 @@
 import Gate from './Gate.mjs';
 import * as THREE from './three.mjs';
 
-const C = {
-    PACMANRADIUS: 0.5,
-    MINMOUTH: 0,
-    MAXMOUTH: Math.PI * 3 / 8,
-    MOUTHDELTA: .1,
-    SIDES:256,
-    MOVETIME: 100,
-    MOVESTEPS: 100
-}
+const PACMANRADIUS = 0.5;
+const MINMOUTH = 0;
+const MAXMOUTH = Math.PI * 3/8;
+const MOUTHDELTA = 0.1;
+const SIDES = 256;
+const MOVETIME = 100;
+const MOVESTEPS = 100;
+const DT = MOVETIME / MOVESTEPS;
+
 
 function getFacing(key, dir)
 {
@@ -37,9 +37,9 @@ export default class Player{
 
         //player shapes
         var topShape = new THREE.SphereGeometry(
-            C.PACMANRADIUS,
-            C.SIDES,
-            C.SIDES,
+            PACMANRADIUS,
+            SIDES,
+            SIDES,
             0,
             Math.PI * 2,
             0,
@@ -47,9 +47,9 @@ export default class Player{
         );
 
         var botShape = new THREE.SphereGeometry(
-            C.PACMANRADIUS,
-            C.SIDES,
-            C.SIDES,
+            PACMANRADIUS,
+            SIDES,
+            SIDES,
             0,
             Math.PI * 2,
             Math.PI / 2,
@@ -64,6 +64,7 @@ export default class Player{
         this.topMesh = new THREE.Mesh(topShape, mat);
         this.botMesh = new THREE.Mesh(botShape, mat);
         this.moving = false;
+        this.opening = true;
     }
 
     render(scene)
@@ -109,6 +110,54 @@ export default class Player{
     {
         if('wasd'.indexOf(key) > -1)
             this.facing = getFacing(key, this.facing);
+            this.topMesh.rotation.x = 0;
+            this.topMesh.rotation.z = 0;
+            this.opening = true;
+    }
+
+    moveHead()
+    {
+        var dmx = this.facing[0] * MOUTHDELTA * (this.opening ? 1 : -1);
+        var dmz = this.facing[1] * MOUTHDELTA * (this.opening ? 1 : -1);
+        console.log(dmx, dmz);
+        this.topMesh.rotation.x+=dmx;
+        this.topMesh.rotation.z+=dmz;
+
+        if(this.topMesh.rotation.x + this.topMesh.rotation.z > MAXMOUTH)
+        {
+            this.opening = true;
+        }
+        if(this.topMesh.rotation.x + this.topMesh.rotation.z < MINMOUTH)
+        {
+            this.opening = false;
+        }
+
+    }
+
+    graphicsMove(dx, dz, remainingSteps, dt, camera)
+    {
+        this.topMesh.position.x+=dx;
+        this.topMesh.position.z+=dz;
+        this.botMesh.position.x+=dx;
+        this.botMesh.position.z+=dz;
+        camera.position.x+=dx;
+        camera.position.z+=dz;
+        this.moveHead();
+        if(remainingSteps > 1)
+        {
+            setTimeout(() => {
+                this.graphicsMove(dx, dz, remainingSteps-1, dt, camera);
+            }, dt);
+        }
+        else
+        {
+            this.topMesh.position.x = this.x;
+            this.topMesh.position.z = this.z;
+            this.botMesh.position.x = this.x;
+            this.botMesh.position.z = this.z;
+            camera.position.x = this.x;
+            camera.position.z = this.z + 1;
+        }
     }
 
     //moves the player (normally handled in each game tick)
@@ -119,12 +168,13 @@ export default class Player{
             this.moving = true;
             this.x+=this.facing[0];
             this.z+=this.facing[1];
-            camera.position.x+=this.facing[0];
-            camera.position.z+=this.facing[1];
-            this.botMesh.position.x = this.x;
-            this.botMesh.position.z = this.z;  
-            this.topMesh.position.x = this.x;
-            this.topMesh.position.z = this.z;          
+            this.graphicsMove(
+                this.facing[0] / MOVESTEPS,
+                this.facing[1] / MOVESTEPS,
+                MOVESTEPS,
+                DT,
+                camera
+            )
             this.moving = false;
         }
     }
