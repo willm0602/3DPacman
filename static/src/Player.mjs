@@ -120,8 +120,8 @@ export default class Player{
         var dmx = this.facing[0] * MOUTHDELTA * (this.opening ? 1 : -1);
         var dmz = this.facing[1] * MOUTHDELTA * (this.opening ? 1 : -1);
         console.log(dmx, dmz);
-        this.topMesh.rotation.x+=dmx;
-        this.topMesh.rotation.z+=dmz;
+        this.topMesh.rotation.z+=dmx;
+        this.topMesh.rotation.x+=dmz;
 
         if(this.topMesh.rotation.x + this.topMesh.rotation.z > MAXMOUTH)
         {
