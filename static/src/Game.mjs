@@ -4,8 +4,20 @@ import * as C from "./C.mjs";
 import Gates from "./Gates.mjs";
 import Gate from "./Gate.mjs";
 import GHOSTS from "./Ghosts.mjs";
+import PELLETS from "./Pellets.mjs";
 
 const TICKDELAY = 0.3;
+
+var frames = []
+function fps()
+{
+  let total = 0;
+  for(let frame of frames)
+  {
+    total = total + frame;
+  }
+  return total / frames.length;
+}
 
 export default class Game {
   constructor() {
@@ -47,6 +59,12 @@ export default class Game {
       ghost.render(this.scene);
     })
 
+    this.pellets = PELLETS;
+    for(var pellet of this.pellets)
+    {
+      pellet.render(this.scene);
+    }
+
     document.addEventListener("keypress", (e) => {
       this.player.turn(e.key, this.gates, this.camera);
     });
@@ -73,6 +91,12 @@ export default class Game {
 
     var now = new Date();
     var dt = (now - game.lastGameLoop) / (1000);
+    if(dt!=0)
+    {
+      frames.push(1/dt);
+      console.log(fps(), "fps");
+    }
+
 
     if(dt >TICKDELAY)
       game.gameloop();
