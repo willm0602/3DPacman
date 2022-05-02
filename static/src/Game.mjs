@@ -5,7 +5,7 @@ import Gates from "./Gates.mjs";
 import Gate from "./Gate.mjs";
 import GHOSTS from "./Ghosts.mjs";
 
-const TICKDELAY = 1;
+const TICKDELAY = 0.3;
 
 export default class Game {
   constructor() {
@@ -48,7 +48,7 @@ export default class Game {
     })
 
     document.addEventListener("keypress", (e) => {
-      this.player.turn(e.key);
+      this.player.turn(e.key, this.gates, this.camera);
     });
   }
 

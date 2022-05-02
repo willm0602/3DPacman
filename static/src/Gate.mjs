@@ -5,6 +5,8 @@ import * as THREE from "./three.mjs";
 const HEIGHT = 0.4;
 const DEPTH = 0.01;
 const mat = new THREE.MeshBasicMaterial({ color: 0x1f285f });
+const glowMat = new THREE.MeshBasicMaterial({color: 0x4050C0, transparent: true, opacity: 0.2});
+const GLOWGAP = 0.06
 
 const ORIENTATIONS = {
 	VERTICAL: 0,
@@ -41,10 +43,18 @@ export default class Gate {
 			width, HEIGHT, depth
 		);
 		
+		var glowShape = new THREE.BoxGeometry(
+			width + GLOWGAP, HEIGHT + GLOWGAP, depth + GLOWGAP
+		)
+
 		var mesh = new THREE.Mesh(shape, mat);
 		mesh.position.x = centerX;
 		mesh.position.z = centerZ;
-
 		scene.add(mesh);
+
+		var glowMesh = new THREE.Mesh(glowShape, glowMat);
+		glowMesh.position.x = centerX;
+		glowMesh.position.z = centerZ;
+		scene.add(glowMesh);
 	}
 }

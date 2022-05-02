@@ -35,7 +35,7 @@ export default class Player{
         this.angle = angle;
         this.facing = [0, -1]
 
-        //player shapes
+        //geometries for top and bottom halves of pacman
         var topShape = new THREE.SphereGeometry(
             PACMANRADIUS,
             SIDES,
@@ -56,13 +56,22 @@ export default class Player{
             Math.PI
         );
         
+        //glow for pacman
+        var glowShape = new THREE.SphereGeometry(
+            C.PACMANRADIUS + C.GLOWGAP,
+            C.SIDES,
+            C.SIDES
+        )
 
         //material for Pacman
-        var mat = new THREE.MeshBasicMaterial({color: 0xE6FF00});
+        var mat = new THREE.MeshBasicMaterial({color: 0xF6FF00});
+        var glow = new THREE.MeshBasicMaterial({color: 0xC3FF00, transparent: true, opacity: 0.5})
+
 
         //object properties
         this.topMesh = new THREE.Mesh(topShape, mat);
         this.botMesh = new THREE.Mesh(botShape, mat);
+        this.glowMesh = new THREE.Mesh(glowShape, glow);
         this.moving = false;
         this.opening = true;
     }
@@ -71,6 +80,7 @@ export default class Player{
     {
         scene.add(this.topMesh);
         scene.add(this.botMesh);
+        scene.add(this.glowMesh);
     }
 
     //checks if player would run into a specified gate
