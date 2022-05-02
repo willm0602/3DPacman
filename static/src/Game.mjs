@@ -89,15 +89,9 @@ export default class Game {
       game = this;
     }
 
+    //handles one "game tick" every 1000ms (1 second)
     var now = new Date();
     var dt = (now - game.lastGameLoop) / (1000);
-    if(dt!=0)
-    {
-      frames.push(1/dt);
-      console.log(fps(), "fps");
-    }
-
-
     if(dt >TICKDELAY)
       game.gameloop();
 
