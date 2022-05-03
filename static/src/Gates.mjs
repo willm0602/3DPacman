@@ -33,7 +33,7 @@ const coordinates = [
   [9, -3, 9, -5],
   [8, -5, 8, -5],
   [9, 2, 9, 4],
-  [8, 4, 8, 4]
+  [8, 4, 8, 4],
 ];
 
 export default coordinates;
