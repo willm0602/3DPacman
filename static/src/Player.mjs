@@ -11,7 +11,7 @@ const SIDES = 256;
 const MOVETIME = 100;
 const MOVESTEPS = 15;
 const DT = MOVETIME / MOVESTEPS;
-const GLOWGAP = 0.1;
+const GLOWGAP = 0.01;
 
 function getFacing(key, dir) {
   if (key == "w") return [0, -1];
@@ -49,25 +49,13 @@ export default class Player {
       Math.PI
     );
 
-    //glow for pacman
-    var glowShape = new THREE.SphereGeometry(
-      PACMANRADIUS + GLOWGAP,
-      SIDES,
-      SIDES
-    );
 
     //material for Pacman
-    var mat = new THREE.MeshBasicMaterial({ color: 0xf6ff00 });
-    var glow = new THREE.MeshBasicMaterial({
-      color: 0xc3ff00,
-      transparent: true,
-      opacity: 0.5,
-    });
+    var mat = new THREE.MeshBasicMaterial({ color: 0xf6ff00 , transparent: true, opacity: 0.8});
 
     //object properties
     this.topMesh = new THREE.Mesh(topShape, mat);
     this.botMesh = new THREE.Mesh(botShape, mat);
-    this.glowMesh = new THREE.Mesh(glowShape, glow);
     this.moving = false;
     this.opening = true;
   }
@@ -75,7 +63,6 @@ export default class Player {
   render(scene) {
     scene.add(this.topMesh);
     scene.add(this.botMesh);
-    //scene.add(this.glowMesh);
   }
 
   //checks if player would run into a specified gate
@@ -143,8 +130,6 @@ export default class Player {
     this.botMesh.position.z += dz;
     camera.position.x += dx;
     camera.position.z += dz;
-    this.glowMesh.position.x = this.topMesh.position.x;
-    this.glowMesh.position.z = this.topMesh.position.z;
     if (remainingSteps > 0) {
       setTimeout(() => {
         this.graphicsMove(dx, dz, remainingSteps - 1, dt, camera);

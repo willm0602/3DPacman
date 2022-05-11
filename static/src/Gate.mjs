@@ -3,7 +3,6 @@
 import * as THREE from "./three.mjs";
 
 const HEIGHT = 0.4;
-const DEPTH = 0.01;
 const mat = new THREE.MeshBasicMaterial({ color: 0x1f285f });
 const glowMat = new THREE.MeshBasicMaterial({
   color: 0x4050c0,
@@ -11,11 +10,6 @@ const glowMat = new THREE.MeshBasicMaterial({
   opacity: 0.2,
 });
 const GLOWGAP = 0.06;
-
-const ORIENTATIONS = {
-  VERTICAL: 0,
-  HORIZONTAL: 1,
-};
 
 export default class Gate {
   constructor(x1, z1, x2, z2) {
@@ -25,15 +19,8 @@ export default class Gate {
     this.z2 = z2;
   }
 
-  getOrientation() {
-    if (Math.abs(this.x1 - this.x2)) {
-      return ORIENTATIONS.HORIZONTAL;
-    }
-    return ORIENTATIONS.VERTICAL;
-  }
 
   render(scene) {
-    var orientation = this.getOrientation();
 
     var centerX = (this.x1 + this.x2) / 2;
     var centerZ = (this.z1 + this.z2) / 2;
