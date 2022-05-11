@@ -20,11 +20,11 @@ export function RandomMovement(ghost=new Ghost(0xfff,0,0), otherGhosts=[new Ghos
 
     const pointIntersectsGates = (point=[0,0],gate = new Gate(0,0,0,0)) => {
         let lX = Math.min(gate.x1, gate.x2);
-        let rX = gate.x1 + gate.x2 - lX;
+        let rX = Math.max(gate.x1, gate.x2);
         let lZ = Math.min(gate.z1, gate.z2);
-        let rZ = gate.z1 + gate.z2 - lZ;
+        let rZ = Math.max(gate.z1, gate.z2);
         let [x, z] = point;
-        return lX < x && x < rX && lZ < z && z < rZ;
+        return lX <= x && x <= rX && lZ <= z && z <= rZ;
     }
 
 

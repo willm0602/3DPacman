@@ -6,7 +6,7 @@ import Gate from "./Gate.mjs";
 import GHOSTS from "./Ghosts.mjs";
 import PELLETS from "./Pellets.mjs";
 
-const TICKDELAY = 0.3;
+const TICKDELAY = 1;
 
 var frames = [];
 function fps() {
@@ -100,6 +100,9 @@ export default class Game {
     {
       ghost.move(this.ghosts, this.player, this.gates);
     }
+
+    if(this.player.intersectsGhost(this.ghosts))
+      window.location.href = '/gameover'
   }
 
   animationLoop(game) {

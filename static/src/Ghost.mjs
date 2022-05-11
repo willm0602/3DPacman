@@ -100,7 +100,6 @@ export default class Ghost {
         this, ghosts, player, gates 
     );
 
-    console.log("choice is", choice);
 
     let [x, z] = choice;
 

@@ -1,6 +1,8 @@
 "use strict";
 
 import Gate from "./Gate.mjs";
+import Ghost from "./Ghost.mjs";
+import Pellet from "./Pellet.mjs";
 import * as THREE from "./three.mjs";
 
 const PACMANRADIUS = 0.5;
@@ -160,5 +162,25 @@ export default class Player {
       );
       this.moving = false;
     }
+  }
+
+  intersectsGhost(ghosts=[new Ghost()])
+  {
+    for(var ghost of ghosts)
+    {
+      if(ghost.x == this.x && ghost.z == this.z)
+        return true;
+    }
+    return false;
+  }
+
+  intersectsPellet(pellets=[new Pellet()])
+  {
+    for(let pellet of pellets)
+    {
+      if(pellet.x == this.x && pellet.z == this.z)
+        return pellet.large ? 2 : 1
+    }
+    return false;
   }
 }
