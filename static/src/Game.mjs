@@ -6,7 +6,10 @@ import Gate from "./Gate.mjs";
 import GHOSTS from "./Ghosts.mjs";
 import PELLETS from "./Pellets.mjs";
 
-const TICKDELAY = 1;
+const TICKDELAY = 0.5;
+const SMALLPELLETSCORE = 10;
+const LARGEPELLETSCORE = 50;
+const EATGHOSTSCORE = 200;
 
 var frames = [];
 function fps() {
@@ -82,7 +85,13 @@ export default class Game {
       if (pellet.x == this.player.x && pellet.z == this.player.z) {
         pellet.remove();
         this.pellets.splice(i, 1);
-        this.score += 1;
+        if (!pellet.large) {
+          this.score += SMALLPELLETSCORE;
+        } else {
+          this.score += LARGEPELLETSCORE;
+          this.turnGhostsBlue();
+        }
+
         document.body.getElementsByClassName(
           "score"
         )[0].textContent = `Score: ${this.score}`;
@@ -91,18 +100,31 @@ export default class Game {
     }
   }
 
+  turnGhostsBlue() {
+    for (let ghost of this.ghosts) {
+      ghost.turnBlue();
+    }
+  }
+
   gameloop() {
     this.player.move(this.camera, this.gates);
     this.lastGameLoop = new Date();
 
     this.checkPelletCollision();
-    for(let ghost of this.ghosts)
-    {
+    for (let ghost of this.ghosts) {
       ghost.move(this.ghosts, this.player, this.gates);
+      ghost.lowerBlue();
     }
 
-    if(this.player.intersectsGhost(this.ghosts))
-      window.location.href = '/gameover'
+    let ghost = this.player.intersectsGhost(this.ghosts);
+    if (ghost !== false) {
+      if (ghost.isBlue()) {
+        this.score += EATGHOSTSCORE;
+        ghost.kill();
+      } else {
+        window.location.href = "/gameover";
+      }
+    }
   }
 
   animationLoop(game) {

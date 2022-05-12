@@ -4,9 +4,10 @@ import { RandomMovement } from "./GhostMovements.mjs";
 const RADIUS = 0.5;
 const SIDES = 32;
 const LEGRADIUS = 0.05;
-
+const BLUELIFE = 30;
+const BLUE = 0x0003ff;
 export default class Ghost {
-  constructor(color, x = 0, z = 0, moveChoice=RandomMovement) {
+  constructor(color, x = 0, z = 0, moveChoice = RandomMovement) {
     this.color = color;
     this.x = x;
     this.z = z;
@@ -16,6 +17,7 @@ export default class Ghost {
       opacity: 0.6,
     });
     this.moveChoice = moveChoice;
+    this.blueLife = 0;
   }
   addBody(scene) {
     var bodyShape = new THREE.SphereGeometry(
@@ -94,12 +96,8 @@ export default class Ghost {
     this.addLegs(scene);
   }
 
-  move(ghosts, player, gates){
-    
-    let choice = this.moveChoice(
-        this, ghosts, player, gates 
-    );
-
+  move(ghosts, player, gates) {
+    let choice = this.moveChoice(this, ghosts, player, gates);
 
     let [x, z] = choice;
 
@@ -108,17 +106,32 @@ export default class Ghost {
 
     this.x = x;
     this.z = z;
-    
-    for(let leg of this.legs)
-    {
-        leg.foot.position.x+=dx;
-        leg.leg.position.x+=dx;
-        leg.foot.position.z+=dz;
-        leg.leg.position.z+=dz;
+
+    for (let leg of this.legs) {
+      leg.foot.position.x += dx;
+      leg.leg.position.x += dx;
+      leg.foot.position.z += dz;
+      leg.leg.position.z += dz;
     }
 
-    this.body.position.x+=dx;
-    this.body.position.z+=dz;
+    this.body.position.x += dx;
+    this.body.position.z += dz;
+  }
 
+  isBlue() {
+    return this.blueLife > 0;
+  }
+
+  turnBlue() {
+    this.mat.setValues({ color: BLUE });
+    this.blueLife = BLUELIFE;
+  }
+
+  lowerBlue() {
+    var wasBlue = this.blueLife > 0;
+    this.blueLife -= 1;
+    if (this.blueLife <= 0 && wasBlue) {
+      this.mat.setValues({ color: this.color });
+    }
   }
 }

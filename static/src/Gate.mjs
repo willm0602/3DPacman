@@ -19,9 +19,7 @@ export default class Gate {
     this.z2 = z2;
   }
 
-
   render(scene) {
-
     var centerX = (this.x1 + this.x2) / 2;
     var centerZ = (this.z1 + this.z2) / 2;
 

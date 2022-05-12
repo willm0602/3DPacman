@@ -51,9 +51,12 @@ export default class Player {
       Math.PI
     );
 
-
     //material for Pacman
-    var mat = new THREE.MeshBasicMaterial({ color: 0xf6ff00 , transparent: true, opacity: 0.8});
+    var mat = new THREE.MeshBasicMaterial({
+      color: 0xf6ff00,
+      transparent: true,
+      opacity: 0.8,
+    });
 
     //object properties
     this.topMesh = new THREE.Mesh(topShape, mat);
@@ -164,22 +167,16 @@ export default class Player {
     }
   }
 
-  intersectsGhost(ghosts=[new Ghost()])
-  {
-    for(var ghost of ghosts)
-    {
-      if(ghost.x == this.x && ghost.z == this.z)
-        return true;
+  intersectsGhost(ghosts = [new Ghost()]) {
+    for (var ghost of ghosts) {
+      if (ghost.x == this.x && ghost.z == this.z) return ghost;
     }
     return false;
   }
 
-  intersectsPellet(pellets=[new Pellet()])
-  {
-    for(let pellet of pellets)
-    {
-      if(pellet.x == this.x && pellet.z == this.z)
-        return pellet.large ? 2 : 1
+  intersectsPellet(pellets = [new Pellet()]) {
+    for (let pellet of pellets) {
+      if (pellet.x == this.x && pellet.z == this.z) return pellet.large ? 2 : 1;
     }
     return false;
   }
