@@ -18,6 +18,7 @@ export default class Ghost {
     });
     this.moveChoice = moveChoice;
     this.blueLife = 0;
+    this.origin = [x, z]
   }
   addBody(scene) {
     var bodyShape = new THREE.SphereGeometry(
@@ -132,6 +133,22 @@ export default class Ghost {
     this.blueLife -= 1;
     if (this.blueLife <= 0 && wasBlue) {
       this.mat.setValues({ color: this.color });
+    }
+  }
+
+  kill(){
+    let [x, z] = this.origin;
+    this.body.position.x = x;
+    this.body.position.z = z;
+    for(let leg of this.legs)
+    {
+      let legMesh = leg.leg;
+      let foot = let.foot;
+      let dx = legMesh.position.x - this.x;
+      let dz = legMesh.position.z - this.z;
+      legMesh.position.x = x + dx;
+      legMesh.position.z = x + dz;
+      
     }
   }
 }
