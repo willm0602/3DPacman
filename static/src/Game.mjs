@@ -95,7 +95,6 @@ export default class Game {
           }
           return;
         }
-        console.log(this.pellets.length);
 
         if (!pellet.large) {
           this.score += SMALLPELLETSCORE;
@@ -128,6 +127,7 @@ export default class Game {
         this.score += EATGHOSTSCORE;
         ghost.kill();
       } else {
+        localStorage.setItem("3dpacmanscore", this.score)
         window.location.href = "/gameover";
       }
     }
@@ -144,6 +144,7 @@ export default class Game {
         this.score += EATGHOSTSCORE;
         ghost.kill();
       } else {
+        localStorage.setItem("3dpacmanscore", this.score)
         window.location.href = "/gameover";
       }
     }

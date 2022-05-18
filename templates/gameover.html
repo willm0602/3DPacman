@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>3DPacman</title>
     <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
+    <script defer src="{{url_for('static',filename='src/gameover.js')}}"></script>
   </head>
 
   <body class="game-over">
     <h1>Game Over</h1>
+    <h2>Final Score: <span class="final-score"></span></h2>
     <a href="/game">Play Again</a>
   </body>
 </html>

@@ -6,7 +6,7 @@ import * as THREE from "./three.mjs";
 
 const PACMANRADIUS = 0.5;
 const MINMOUTH = 0;
-const MAXMOUTH = Math.PI / 4;
+const MAXMOUTH = Math.PI;
 const MOUTHDELTA = 0.3;
 const SIDES = 256;
 const MOVETIME = 100;
@@ -113,6 +113,7 @@ export default class Player {
     var dmz = this.facing[1] * MOUTHDELTA * (this.opening ? 1 : -1);
     dmx = dmx / MOVESTEPS;
     dmz = dmz / MOVESTEPS;
+    console.log(this.topMesh.rotation.x, this.topMesh.rotation.z);
     
     this.topMesh.rotation.x += dmx;
     this.topMesh.rotation.z += dmz;
@@ -139,6 +140,8 @@ export default class Player {
     if (remainingSteps > 0) {
       setTimeout(() => {
         this.graphicsMove(dx, dz, remainingSteps - 1, dt, camera);
+        this.moveHead();
+
       }, dt);
     } else {
       this.topMesh.position.x = this.x;
@@ -147,8 +150,6 @@ export default class Player {
       this.botMesh.position.z = this.z;
       camera.position.x = this.x;
       camera.position.z = this.z + 1;
-      this.moveHead();
-
     }
   }
 
