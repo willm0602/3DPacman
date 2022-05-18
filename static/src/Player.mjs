@@ -1,6 +1,5 @@
 "use strict";
 
-import Gate from "./Gate.mjs";
 import Ghost from "./Ghost.mjs";
 import Pellet from "./Pellet.mjs";
 import * as THREE from "./three.mjs";
@@ -13,7 +12,6 @@ const SIDES = 256;
 const MOVETIME = 100;
 const MOVESTEPS = 15;
 const DT = MOVETIME / MOVESTEPS;
-const GLOWGAP = 0.01;
 
 function getFacing(key, dir) {
   if (key == "w") return [0, -1];
@@ -113,6 +111,9 @@ export default class Player {
   moveHead() {
     var dmx = this.facing[0] * MOUTHDELTA * (this.opening ? 1 : -1);
     var dmz = this.facing[1] * MOUTHDELTA * (this.opening ? 1 : -1);
+    dmx = dmx / MOVESTEPS;
+    dmz = dmz / MOVESTEPS;
+    
     this.topMesh.rotation.x += dmx;
     this.topMesh.rotation.z += dmz;
 
@@ -146,12 +147,13 @@ export default class Player {
       this.botMesh.position.z = this.z;
       camera.position.x = this.x;
       camera.position.z = this.z + 1;
+      this.moveHead();
+
     }
   }
 
   //moves the player (normally handled in each game tick)
   move(camera, gates) {
-    this.moveHead();
     if (!(this.moving || this.wouldRunIntoGates(gates))) {
       this.moving = true;
       this.x += this.facing[0];

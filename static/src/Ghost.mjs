@@ -143,12 +143,14 @@ export default class Ghost {
     for(let leg of this.legs)
     {
       let legMesh = leg.leg;
-      let foot = let.foot;
+      let footMesh = leg.foot;
       let dx = legMesh.position.x - this.x;
       let dz = legMesh.position.z - this.z;
       legMesh.position.x = x + dx;
-      legMesh.position.z = x + dz;
-      
+      legMesh.position.z = z + dz;
+      footMesh.position.x = x + dx;
+      footMesh.position.z = z + dz;
     }
+    [this.x, this.z] = [x, z];
   }
 }

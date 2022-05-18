@@ -61,7 +61,7 @@ export default class Game {
       ghost.render(this.scene);
     });
 
-    this.pellets = PELLETS;
+    this.pellets = [...PELLETS]
     for (var pellet of this.pellets) {
       pellet.render(this.scene);
     }
@@ -85,6 +85,18 @@ export default class Game {
       if (pellet.x == this.player.x && pellet.z == this.player.z) {
         pellet.remove();
         this.pellets.splice(i, 1);
+
+        if(this.pellets.length == 0)
+        {
+          this.pellets = [...PELLETS];
+          for(var pellet of this.pellets)
+          {
+            pellet.render(this.scene);
+          }
+          return;
+        }
+        console.log(this.pellets.length);
+
         if (!pellet.large) {
           this.score += SMALLPELLETSCORE;
         } else {
@@ -125,6 +137,8 @@ export default class Game {
         window.location.href = "/gameover";
       }
     }
+
+
   }
 
   animationLoop(game) {

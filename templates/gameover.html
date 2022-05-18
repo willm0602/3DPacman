@@ -5,9 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
   </head>
 
-  <body>
+  <body class="game-over">
     <h1>Game Over</h1>
+    <a href="/game">Play Again</a>
   </body>
 </html>

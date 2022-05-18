@@ -3,6 +3,10 @@ from flask import Flask, render_template, request
 app = Flask(__name__)
 
 @app.route('/')
+def start():
+    return render_template("start.html")
+
+@app.route('/game')
 def game():
     return render_template("game.html")
 
