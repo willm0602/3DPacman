@@ -122,13 +122,23 @@ export default class Game {
     this.player.move(this.camera, this.gates);
     this.lastGameLoop = new Date();
 
+    let ghost = this.player.intersectsGhost(this.ghosts);
+    if (ghost !== false) {
+      if (ghost.isBlue()) {
+        this.score += EATGHOSTSCORE;
+        ghost.kill();
+      } else {
+        window.location.href = "/gameover";
+      }
+    }
+
     this.checkPelletCollision();
     for (let ghost of this.ghosts) {
       ghost.move(this.ghosts, this.player, this.gates);
       ghost.lowerBlue();
     }
 
-    let ghost = this.player.intersectsGhost(this.ghosts);
+    ghost = this.player.intersectsGhost(this.ghosts);
     if (ghost !== false) {
       if (ghost.isBlue()) {
         this.score += EATGHOSTSCORE;

@@ -152,5 +152,6 @@ export default class Ghost {
       footMesh.position.z = z + dz;
     }
     [this.x, this.z] = [x, z];
+    this.blueLife = 0;
   }
 }
